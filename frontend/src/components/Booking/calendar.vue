@@ -91,6 +91,7 @@
             interval-count="17"
             :type="type"
             category-show-all
+            :categories="categories"
             :category-days="categoryDays"
             :events="events"
             :event-overlap-mode="mode"
@@ -256,7 +257,7 @@ export default class Calendar extends Vue {
   eventsList: any = []
   currentDay: any = moment().format('YYYY-MM-DD')// new Date()
 
-  categories: any = this.roomResources // [] // 'Boardroom 1'
+  // categories: any = this.roomResources // [] // 'Boardroom 1'
 
   updated () {
     this.disableSatSun();
@@ -366,6 +367,16 @@ export default class Calendar extends Vue {
       return true;
     });
 
+  }
+  
+  get categories() {
+    if (!this.offsiteVisible) {
+      return this.roomResources.filter(rr => rr.id !== '_offsite').map(r => r.title)
+    }
+    if (this.offsiteOnly) {
+      return this.roomResources.filter(rr => rr.id === '_offsite').map(r => r.title)
+    }
+    return this.roomResources.map(r => r.title)
   }
 
   get adjustment () {
